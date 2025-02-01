@@ -1,64 +1,39 @@
-// Array to store book data
-const books = [];
+document.getElementById("apply-form").onsubmit = async (e) => {
+    e.preventDefault();
+    const name = document.getElementById("name").value;
+    const zipcode = document.getElementById("zipcode").value;
 
-// Function to add a book to the list and send it to the server
-function addBook() {
-    const bookTitle = document.getElementById('bookTitle').value;
-    
-    // Create a JSON object with book data
-    const bookData = {
-        title: bookTitle
-    };
-
-    // Send the book data to the server via POST request
-    fetch('/api/add_book', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(bookData)
-    })
-        .then(response => response.json())
-        .then(data => {
-            // Display a success message or handle errors if needed
-            console.log(data.message);
-
-            // Add the new book data to the books array
-            books.push(bookData);
-            console.log(books)
-
-            // Refresh the book list
-            displayBooks();
-        })
-        .catch(error => {
-            console.error('Error adding book:', error);
-        });
-}
-
-// Function to display books in the list
-function displayBooks() {
-    const bookList = document.getElementById('bookList');
-    bookList.innerHTML = ''; // Clear existing book list
-
-    books.forEach(book => { 
-        const bookElement = document.createElement('div');
-        bookElement.innerHTML = `
-            <h2>Added Successfully :${book.title}</h2>
-        `;
-        bookList.appendChild(bookElement);
+    const response = await fetch("/apply", {
+        method: "POST",
+        body: new URLSearchParams({ name, zipcode }),
     });
-}
-// Function to fetch and display all books from the server
-function showAllBooks() {
-    fetch('/api/books')
-        .then(response => response.json())
-        .then(data => {
-            const bookList = document.getElementById('allbooks');
-            bookList.innerHTML = ''; // Clear existing book list
-            console.log(data);
-            bookList.textContent = JSON.stringify(data); // Display the list as a string
-        })
-        .catch(error => {
-            console.error('Error fetching all books:', error);
-        });
-}
+
+    const result = await response.json();
+    document.getElementById("apply-result").textContent =
+        result.application_number ? `Application submitted. Number: ${result.application_number}` : result.error;
+};
+
+document.getElementById("status-form").onsubmit = async (e) => {
+    e.preventDefault();
+    const applicationNumber = document.getElementById("application-number").value;
+
+    const response = await fetch(`/status/${applicationNumber}`);
+    const result = await response.json();
+
+    document.getElementById("status-result").textContent =
+        result.status ? `Status: ${result.status}` : "Application not found.";
+};
+
+document.getElementById("update-form").onsubmit = async (e) => {
+    e.preventDefault();
+    const applicationNumber = document.getElementById("update-application-number").value;
+    const status = document.getElementById("status").value;
+
+    const response = await fetch("/update_status", {
+        method: "POST",
+        body: new URLSearchParams({ application_number: applicationNumber, status }),
+    });
+
+    const result = await response.json();
+    document.getElementById("update-result").textContent = result.message || result.error;
+};

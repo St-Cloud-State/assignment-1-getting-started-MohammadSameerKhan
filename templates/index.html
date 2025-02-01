@@ -1,35 +1,40 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Book Reviews</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acme Financial Loan Portal</title>
+    <script src="/static/script.js" defer></script>
 </head>
-
 <body>
-    <h1>Book Reviews</h1>
-	
-	<!-- Add a div to input book data -->
-    <div id="addBook">
-        <h2>Add a Book</h2>
-        <input type="text" id="bookTitle" placeholder="Book Title">
-        <button onclick="addBook()">Add</button>
-    </div>
+    <h1>Acme Financial Loan Portal</h1>
 
+    <h2>Apply for a Loan</h2>
+    <form id="apply-form">
+        <input type="text" id="name" placeholder="Name" required />
+        <input type="text" id="zipcode" placeholder="Zipcode" required />
+        <button type="submit">Submit Application</button>
+    </form>
+    <div id="apply-result"></div>
 
-	<!-- Display books in this div -->
-    <div id="bookList">
-    <!-- Book data will be displayed here dynamically -->
-    </div>
+    <h2>Check Application Status</h2>
+    <form id="status-form">
+        <input type="number" id="application-number" placeholder="Application Number" required />
+        <button type="submit">Check Status</button>
+    </form>
+    <div id="status-result"></div>
 
-    <button id="showBooksButton" onclick="showAllBooks()">Show All Books</button>	
-    
-	<!-- Display books in this div -->
-    <div id="allbooks">
-        <!-- Book data will be displayed here dynamically -->
-    </div>
-    
-
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <h2>Update Application Status</h2>
+    <form id="update-form">
+        <input type="number" id="update-application-number" placeholder="Application Number" required />
+        <select id="status">
+            <option value="received">Received</option>
+            <option value="processing">Processing</option>
+            <option value="accepted">Accepted</option>
+            <option value="rejected">Rejected</option>
+        </select>
+        <button type="submit">Update Status</button>
+    </form>
+    <div id="update-result"></div>
 </body>
-
 </html>
